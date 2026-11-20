@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ps5watch</string>
+
+  <!-- caffeinate -i: the Mac doesn't fall asleep while the watcher runs -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/caffeinate</string>
+    <string>-i</string>
+    <string>/Users/jb/Projects/ps5-watch/.venv/bin/python</string>
+    <string>/Users/jb/Projects/ps5-watch/main.py</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/jb/Projects/ps5-watch</string>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- Restart after a crash, but not after a clean exit (= console bought). -->
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+  <key>ThrottleInterval</key>
+  <integer>60</integer>
+
+  <!-- Run in your GUI session so the Chromium window can open (assist mode). -->
+  <key>LimitLoadToSessionType</key>
+  <string>Aqua</string>
+
+  <key>StandardOutPath</key>
+  <string>/Users/jb/Projects/ps5-watch/logs/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/jb/Projects/ps5-watch/logs/launchd.err.log</string>
+</dict>
+</plist>

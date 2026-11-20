@@ -1,0 +1,48 @@
+name: ps5-watch cloud
+
+# Alert-only check, no account, no buying. Runs every ~10 min (GitHub may delay it).
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ps5-watch
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      # remembers which sites already alerted, so you get one push per restock
+      - uses: actions/cache/restore@v4
+        with:
+          path: cloud_state.json
+          key: cloud-state-${{ github.run_id }}
+          restore-keys: cloud-state-
+
+      - name: Check sites
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TZ: Europe/Paris
+        # headed Chromium on a virtual screen: several sites block headless
+        run: xvfb-run -a python main.py --cloud
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: cloud_state.json
+          key: cloud-state-${{ github.run_id }}

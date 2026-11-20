@@ -1,0 +1,60 @@
+# PS5 Pro watch — config
+# No password, no card number here. Ever. Checkout uses the session saved in the Playwright profile.
+
+product: "PS5 Pro 2 To (CFI-7021)"
+max_price: 899.99            # € TTC, livraison comprise si le site l'affiche dans le total
+
+# "assist" (default): fills everything, stops right before the final pay button,
+#                     notifies you and leaves the window open for you to click.
+# "auto":             also clicks the final pay button.
+mode: assist
+
+poll:
+  min_seconds: 120           # never below 120
+  max_seconds: 240
+  between_sites_seconds: [4, 12]   # random pause between two sites of the same round
+
+browser:
+  profile_dir: ./profile     # persistent Chromium profile (your logins live here)
+  headless: false            # keep false: assist mode needs a visible window
+  locale: fr-FR
+  timezone: Europe/Paris
+
+ntfy:
+  server: https://ntfy.sh
+  topic: ""   # set in config.local.yaml (local) or the NTFY_TOPIC secret (GitHub)   # pick a long random topic, subscribe to it in the ntfy app
+
+# Pause a site after a captcha / queue / login / 3DS for this long (you get a notif).
+blocked_pause_minutes: 30
+
+# Sites to watch (order = polling order). Remove a line to stop watching a site.
+# CAPTCHA: the script notifies you and waits this long for you to solve it
+# in the Chromium window (it never solves it itself). 0 = just pause the site.
+captcha_wait_minutes: 10
+
+# Longer pause for sites that hard-block (minutes)
+blocked_pause_by_site:
+  fnac: 180
+  darty: 180
+
+enabled_sites:
+  - playstation
+  - amazon
+  - fnac
+  - darty
+  - boulanger
+  - micromania
+  - cultura
+  - cdiscount
+  - carrefour
+  - leclerc
+  - auchan
+
+# Per-site overrides (optional). Use when a retailer changes the product URL.
+# sites:
+#   amazon:
+#     url: https://www.amazon.fr/dp/XXXXXXXXXX
+#     test_url: https://www.amazon.fr/dp/YYYYYYYYYY
+
+logs_dir: ./logs
+state_file: ./state.json

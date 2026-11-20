@@ -1,0 +1,7 @@
+.venv/
+profile/
+logs/
+state.json
+__pycache__/
+config.local.yaml
+cloud_state.json
